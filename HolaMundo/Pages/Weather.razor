@@ -1,0 +1,164 @@
+﻿@page "/weather"
+@inject NavigationManager NavigationManager
+
+<style>
+    body {
+        background-color: #f8f9fa;
+    }
+
+    .logo-vc {
+        height: 50px;
+        margin: 10px 0;
+    }
+
+    .bg-primary {
+        background-color: #003366 !important;
+        color: white;
+        text-align: center;
+        font-weight: bold;
+        padding: 15px;
+        border-radius: 10px;
+    }
+
+    .borde{
+        border-radius:10px;
+        background-color: white;
+
+    }
+
+    .bg-success {
+        background-color: #336633 !important;
+        color: white;
+        text-align: center;
+        font-weight: bold;
+        padding: 15px;
+        border-radius: 10px;
+    }
+
+    .category {
+        background-color: white;
+        box-shadow: 0px 0px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .btn-custom {
+        background-color: #1976D2;
+        color: white;
+        border-radius: 12px;
+        padding: 12px;
+        font-weight: bold;
+        width: 100%;
+        text-align: center;
+        border: none;
+        cursor: pointer;
+        transition: background-color 0.3s, transform 0.2s;
+        margin: 5px 0;
+    }
+
+        .btn-custom:hover {
+            background-color: #005bb5;
+            transform: scale(1.05);
+        }
+
+    .footer-principal{
+        background-color: #336633 !important;
+        color: white;
+        text-align: center;
+        font-weight: bold;
+        border-radius: 10px;
+    }
+
+    .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        gap: 10px;
+    }
+
+    @@media (max-width: 768px) {
+        .btn-custom
+
+    {
+        font-size: 0.9rem;
+        padding: 10px;
+    }
+
+    }
+</style>
+
+<div class="container">
+    <div class="borde">
+        <div class="category">
+            <div class="text-center bg-primary">
+                <img class="logo-vc" src="/logoVC.png" alt="Logo">
+                <h2>Agenda VC</h2>
+            </div>
+            <div class="grid p-4">
+                <button class="btn-custom" @onclick="OpenContraseñas">Contraseñas</button>
+                <button class="btn-custom" @onclick="OpenCalendario">Calendario</button>
+                <button class="btn-custom" @onclick="OpenPagos">Pagos</button>
+                <button class="btn-custom" @onclick="OpenDrive">Drive</button>
+                <button class="btn-custom" @onclick="OpenPWA">PWA</button>
+                <button class="btn-custom" @onclick="OpenDeepbrain">Deepbrain</button>
+            </div>        
+        </div>
+
+        <div class="category">
+            <div class="bg-success">
+                <h4>Herramientas IA</h4>
+            </div>
+            <div class="grid p-4">
+                <button class="btn-custom" @onclick="OpenChatGPT">ChatGPT</button>
+                <button class="btn-custom" @onclick="OpenGemini">Gemini</button>
+                <button class="btn-custom" @onclick="OpenGoogleCloud">Google Cloud</button>
+                <button class="btn-custom" @onclick="OpenGrok">Grok</button>
+                <button class="btn-custom" @onclick="OpenDola">Dola</button>
+                <button class="btn-custom" @onclick="OpenNotebookLM">Notebook LM</button>
+            </div>
+        </div>
+
+    
+        <div class="category">
+            <div class="bg-primary">
+                <h4>Herramientas Crypto</h4>
+            </div>
+            <div class="grid p-4">
+                <button class="btn-custom" @onclick="OpenBinance">Binance</button>
+                <button class="btn-custom" @onclick="OpenMetamask">Metamask</button>
+                <button class="btn-custom" @onclick="OpenEtherscan">Etherscan</button>
+                <button class="btn-custom" @onclick="OpenBSC">BSC</button>
+                <button class="btn-custom" @onclick="OpenRemixNFT">Remix-NFT</button>
+                <button class="btn-custom" @onclick="OpenSolidity">Solidity</button>
+            </div>
+        </div>
+
+        <div class="footer-principal text-center">
+            <a href="mailto:contacto@vicercom.cl" class="text-white">contacto@vicercom.cl</a>
+            <div class="bg-primary"></div>
+        </div>
+        
+    </div>
+</div>
+
+@code {
+    private void OpenLink(string url) => NavigationManager.NavigateTo(url, true);
+
+    private void OpenContraseñas() => OpenLink("https://drive.google.com");
+    private void OpenCalendario() => OpenLink("https://calendar.google.com");
+    private void OpenPagos() => OpenLink("https://payments.google.com");
+    private void OpenDrive() => OpenLink("https://drive.google.com");
+    private void OpenPWA() => OpenLink("https://pwa.example.com");
+    private void OpenDeepbrain() => OpenLink("https://deepbrain.com");
+
+    private void OpenChatGPT() => OpenLink("https://chat.openai.com");
+    private void OpenGemini() => OpenLink("https://gemini.com");
+    private void OpenGoogleCloud() => OpenLink("https://cloud.google.com");
+    private void OpenGrok() => OpenLink("https://grok.com");
+    private void OpenDola() => OpenLink("https://dola.com");
+    private void OpenNotebookLM() => OpenLink("https://notebook.google.com");
+
+    private void OpenBinance() => OpenLink("https://binance.com");
+    private void OpenMetamask() => OpenLink("https://metamask.io");
+    private void OpenEtherscan() => OpenLink("https://etherscan.io");
+    private void OpenBSC() => OpenLink("https://bscscan.com");
+    private void OpenRemixNFT() => OpenLink("https://remix.ethereum.org");
+    private void OpenSolidity() => OpenLink("https://soliditylang.org");
+}

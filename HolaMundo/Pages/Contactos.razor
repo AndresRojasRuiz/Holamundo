@@ -1,0 +1,237 @@
+﻿@page "/contactos"
+@using System.Text.Json
+@inject IJSRuntime JS
+
+<PageTitle>Gestor de Contactos</PageTitle>
+
+<style>
+    /* Fonts y Colores */
+    :root {
+    --default-font: "Roboto", system-ui, sans-serif;
+    --heading-font: "Nunito", sans-serif;
+    --nav-font: "Inter", sans-serif;
+    --background-color: #ffffff;
+    --default-color: #3d4348;
+    --heading-color: #3e5055;
+    --accent-color: #388da8;
+    --surface-color: #ffffff;
+    --contrast-color: #ffffff;
+    }
+
+    .tabla-contactos {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+    }
+
+    .tabla-contactos th, .tabla-contactos td {
+    padding: 12px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+    }
+
+    .tabla-contactos th {
+    background-color: var(--accent-color);
+    color: var(--contrast-color);
+    text-align: center;
+    }
+
+    .botones-acciones {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    min-width: 120px; /* Mantiene un ancho mínimo uniforme */
+    }
+
+    .container-contactos {
+    background: var(--background-color);
+    margin: 20px;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15);
+    color: var(--default-color);
+    }
+
+    .contacto-input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid var(--accent-color);
+    border-radius: 5px;
+    font-family: var(--default-font);
+    font-size: 16px;
+    }
+
+    .boton-agregar {
+    background: none;
+    border: 2px solid var(--accent-color);
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-family: var(--nav-font);
+    color: var(--heading-color);
+    transition: all 0.3s ease;
+    }
+
+    .boton-editar, .boton-eliminar {
+    background: none;
+    border: 1px solid var(--accent-color);
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-family: var(--nav-font);
+    }
+
+    .boton-editar:hover, .boton-agregar:hover {
+    background-color: var(--accent-color);
+    color: var(--contrast-color);
+    }
+
+    .boton-eliminar:hover {
+    background-color: red;
+    color: white;
+    }
+
+    .lista-contactos {
+    margin-top: 20px;
+    text-align: left;
+    }
+
+    .contacto-item {
+    background: var(--surface-color);
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .contacto-botones {
+    display: flex;
+    gap: 10px;
+    }
+
+    /* Responsividad */
+    @@media (max-width: 600px) {
+    .tabla-contactos {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+    }
+
+    .tabla-contactos th, .tabla-contactos td {
+    padding: 8px;
+    }
+
+    .botones-acciones {
+    flex-direction: column;
+    gap: 5px;
+    }
+    }
+</style>
+
+<div class="container-contactos">
+    <h2>Gestor de Contactos</h2>
+    <input class="contacto-input" placeholder="Nombre" @bind="nuevoNombre" />
+    <input class="contacto-input" placeholder="Teléfono" @bind="nuevoTelefono" />
+    <input class="contacto-input" placeholder="Correo" type="email" @bind="nuevoCorreo" />
+    <button class="boton-agregar" @onclick="AgregarContacto">Agregar Contacto</button>
+
+    <div class="lista-contactos">
+        <h3>Lista de Contactos</h3>
+        @if (contactos.Any())
+        {
+            <table class="tabla-contactos">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Teléfono</th>
+                        <th>Correo</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var contacto in contactos)
+                    {
+                        <tr>
+                            <td>@contacto.Nombre</td>
+                            <td>@contacto.Telefono</td>
+                            <td>@contacto.Correo</td>
+                            <td class="botones-acciones">
+                                <button class="boton-editar" @onclick="() => EditarContacto(contacto)">Editar</button>
+                                <button class="boton-eliminar" @onclick="() => EliminarContacto(contacto)">Eliminar</button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <p>No hay contactos guardados.</p>
+        }
+
+    </div>
+
+</div>
+
+@code {
+    private List<Contacto> contactos = new List<Contacto>();
+    private string nuevoNombre = string.Empty;
+    private string nuevoTelefono = string.Empty;
+    private string nuevoCorreo = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await CargarContactos();
+    }
+
+    private async Task AgregarContacto()
+    {
+        if (!string.IsNullOrWhiteSpace(nuevoNombre) && !string.IsNullOrWhiteSpace(nuevoTelefono) && !string.IsNullOrWhiteSpace(nuevoCorreo))
+        {
+            contactos.Add(new Contacto { Nombre = nuevoNombre, Telefono = nuevoTelefono, Correo = nuevoCorreo });
+            await GuardarContactos();
+            nuevoNombre = nuevoTelefono = nuevoCorreo = string.Empty;
+        }
+    }
+
+    private async Task CargarContactos()
+    {
+        var datos = await JS.InvokeAsync<string>("localStorage.getItem", "contactos");
+        if (!string.IsNullOrEmpty(datos))
+        {
+            contactos = JsonSerializer.Deserialize<List<Contacto>>(datos) ?? new List<Contacto>();
+        }
+    }
+
+    private async Task GuardarContactos()
+    {
+        await JS.InvokeVoidAsync("localStorage.setItem", "contactos", JsonSerializer.Serialize(contactos));
+    }
+
+    private async Task EditarContacto(Contacto contacto)
+    {
+        nuevoNombre = contacto.Nombre;
+        nuevoTelefono = contacto.Telefono;
+        nuevoCorreo = contacto.Correo;
+        contactos.Remove(contacto);
+        await GuardarContactos();
+    }
+
+    private async Task EliminarContacto(Contacto contacto)
+    {
+        contactos.Remove(contacto);
+        await GuardarContactos();
+    }
+
+    private class Contacto
+    {
+        public string Nombre { get; set; } = string.Empty;
+        public string Telefono { get; set; } = string.Empty;
+        public string Correo { get; set; } = string.Empty;
+    }
+}

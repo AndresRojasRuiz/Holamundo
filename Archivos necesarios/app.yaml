@@ -1,0 +1,50 @@
+runtime: nodejs18
+env: standard
+service: componentes
+
+handlers:
+  - url: /css/(.*)
+    static_files: css/\1
+    upload: css/(.*)
+    secure: always
+
+  - url: /js/(.*)
+    static_files: js/\1
+    upload: js/(.*)
+    secure: always
+
+  - url: /_content/(.*)
+    static_files: _content/\1
+    upload: _content/(.*)
+    secure: always
+
+  - url: /_framework/(.*)
+    static_files: _framework/\1
+    upload: _framework/(.*)
+    secure: always
+ 
+  - url: /sample-data/(.*)
+    static_files: sample-data/\1
+    upload: sample-data/(.*)
+    secure: always
+
+  - url: /(.*\.(gif|png|jpg|css|js|ico|svg|html|json))
+    static_files: \1
+    upload: (.*\.(gif|png|jpg|css|js|ico|svg|html|json))
+    secure: always
+
+
+  - url: /(manifest\.json)
+    static_files: manifest.json
+    upload: manifest.json
+    secure: always
+
+  - url: /(service-worker.*)
+    static_files: \1
+    upload: (service-worker.*)
+    secure: always
+
+  - url: /.*
+    static_files: index.html
+    upload: index.html
+    secure: always

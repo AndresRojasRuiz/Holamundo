@@ -1,0 +1,123 @@
+﻿@page "/counter"
+
+<style>
+    body {
+        background-color: #f8f9fa;
+    }
+
+    .logo-vc {
+        height: 40px;
+        margin-bottom: 5px;
+    }
+
+    .bg-primary {
+        background-color: #003366 !important;
+    }
+
+    .bg-success {
+        background-color: #336633 !important;
+    }
+
+    .bg-dark {
+        background-color: #333333 !important;
+    }
+
+    .section-title {
+        font-size: 1.5rem;
+        font-weight: bold;
+    }
+
+    .bordered {
+        border: 1px solid;
+        padding: 5px;
+        font-weight: bold;
+        font-size: 1rem;
+    }
+
+    a {
+        color: #003366;
+        text-decoration: none;
+    }
+
+        a:hover {
+            text-decoration: underline;
+        }
+</style>
+
+<div class="container py-5">
+    <div class="bg-primary text-white d-flex align-items-center p-2">
+        <img class="logo-vc" src="/logoVC.png" alt="Logo">
+        <span class="flex-grow-1 text-center section-title">Agenda VC</span>
+    </div>
+
+    <div class="row m-0 text-center bg-primary">
+        <div class="col-xl-4 d-flex justify-content-start"><img class="logo-vc" src="/logoVC.png" alt="Logo"></div>
+        <div class="col-xl-4"><span class="text-white text-center section-title">Agenda VC</span></div>
+        <div class="col-xl-4"></div>
+
+    </div>
+
+    <div class="row m-0 text-center">
+        <div class="col-xl-4 bordered"><a href="#">Contraseñas</a></div>
+        <div class="col-xl-4 bordered"><a href="#">Calendario</a></div>
+        <div class="col-xl-4 bordered"><a href="#">Pagos</a></div>
+        <div class="col-xl-4 bordered"><a href="#">Drive</a></div>
+        <div class="col-xl-4 bordered"><a href="#">PWA</a></div>
+        <div class="col-xl-4 bordered"><a href="#">Deepbrain</a></div>
+    </div>
+
+    <div class="bg-success text-white section-title text-center">Herramientas IA</div>
+    <div class="row m-0 text-center">
+        <div class="col-xl-4 bordered"><a href="#">Chatgpt</a></div>
+        <div class="col-xl-4 bordered"><a href="#">Gemini</a></div>
+        <div class="col-xl-4 bordered"><a href="#">Google cloud</a></div>
+        <div class="col-xl-4 bordered"><a href="#">Grok</a></div>
+        <div class="col-xl-4 bordered"><a href="#">Dola</a></div>
+        <div class="col-xl-4 bordered"><a href="#">Notebook LM</a></div>
+    </div>
+
+    <div class="bg-primary text-white section-title text-center">Herramientas Crypto</div>
+    <div class="row m-0 text-center">
+        <div class="col-xl-4 bordered"><a href="#">Binance</a></div>
+        <div class="col-xl-4 bordered"><a href="#">Metamask</a></div>
+        <div class="col-xl-4 bordered"><a href="#">Etherscan</a></div>
+        <div class="col-xl-4 bordered"><a href="#">BSC</a></div>
+        <div class="col-xl-4 bordered"><a href="#">Remix-NFT</a></div>
+        <div class="col-xl-4 bordered"><a href="#">Solidity</a></div>
+    </div>
+
+    <div class="bg-success text-white section-title text-center">Exchanges</div>
+    <div class="row m-0 text-center">
+        <div class="col-xl-4 bordered"><a href="#">Buda</a></div>
+        <div class="col-xl-4 bordered"><a href="#">Crypto</a></div>
+        <div class="col-xl-4 bordered"><a href="#">CoinBase</a></div>
+        <div class="col-xl-4 bordered"><a href="#">Libertex</a></div>
+        <div class="col-xl-4 bordered"><a href="#">Etoro</a></div>
+        <div class="col-xl-4 bordered"><a href="#">Kucoin</a></div>
+    </div>
+
+    <div class="bg-primary text-white section-title text-center">Defi</div>
+    <div class="row m-0 text-center">
+        <div class="col-xl-4 bordered"><a href="#">DeFiPulse</a></div>
+        <div class="col-xl-4 bordered"><a href="#">Historial trades</a></div>
+        <div class="col-xl-4 bordered"><a href="#">Biswap</a></div>
+        <div class="col-xl-4 bordered"><a href="#">CoinGecko</a></div>
+        <div class="col-xl-4 bordered"><a href="#">Autofarm</a></div>
+        <div class="col-xl-4 bordered"><a href="#">AAVE</a></div>
+    </div>
+
+    <div class="bg-success text-white section-title text-center">
+        <a href="mailto:contacto@vicercom.cl" class="text-white">contacto@vicercom.cl</a>
+    </div>
+    <div class="bg-primary" style="height: 20px;"></div>
+</div>
+
+@code {
+    private void OpenLink(string url)
+    {
+        NavigationManager.NavigateTo(url, true);
+    }
+
+    [Inject]
+    private NavigationManager NavigationManager { get; set; }
+}

@@ -1,0 +1,182 @@
+﻿@page "/notas"
+@using System.Text.Json
+@inject IJSRuntime JS
+
+<PageTitle>Editor de Notas</PageTitle>
+
+<style>
+    /* Fonts y Colores */
+    :root {
+        --default-font: "Roboto", system-ui, sans-serif;
+        --heading-font: "Nunito", sans-serif;
+        --nav-font: "Inter", sans-serif;
+        --background-color: #ffffff;
+        --default-color: #3d4348;
+        --heading-color: #3e5055;
+        --accent-color: #388da8;
+        --surface-color: #ffffff;
+        --contrast-color: #ffffff;
+    }
+
+    .container-notas {
+        background: var(--background-color);
+        margin: 20px;
+        padding: 20px;
+        border-radius: 10px;
+        text-align: center;
+        box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15);
+        color: var(--default-color);
+    }
+
+    .textarea-nota {
+        width: 100%;
+        height: 150px;
+        border: 1px solid var(--accent-color);
+        border-radius: 5px;
+        padding: 10px;
+        font-family: var(--default-font);
+        font-size: 16px;
+    }
+
+    .boton-agregar {
+        background: none;
+        border: 2px solid var(--accent-color);
+        padding: 8px 15px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-family: var(--nav-font);
+        color: var(--heading-color);
+        transition: all 0.3s ease;
+    }
+
+        .boton-agregar:hover {
+            background: var(--accent-color);
+            color: var(--contrast-color);
+        }
+
+    .lista-notas {
+        margin-top: 20px;
+        text-align: left;
+    }
+
+    .nota-item {
+        background: var(--surface-color);
+        padding: 10px;
+        margin-bottom: 10px;
+        border-radius: 5px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .nota-botones {
+        display: flex;
+        gap: 10px;
+    }
+
+    .boton-editar, .boton-eliminar {
+        background: none;
+        border: 1px solid var(--accent-color);
+        padding: 5px 10px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-family: var(--nav-font);
+    }
+
+        .boton-editar:hover {
+            background-color: var(--accent-color);
+            color: var(--contrast-color);
+        }
+
+        .boton-eliminar:hover {
+            background-color: red;
+            color: white;
+        }
+
+    /* Diseño Responsive */
+    @@media (max-width: 768px) {
+        .container-notas
+        {
+            padding: 15px;
+        }
+
+        .textarea-nota {
+            height: 120px;
+        }
+
+        .nota-item{
+            display:flex;
+            flex-direction:column;
+        }
+
+        .nota-span {
+            margin-bottom:10px;
+        }
+
+    }
+</style>
+
+<div class="container-notas">
+    <h2>Editor de Notas</h2>
+    <textarea class="textarea-nota" @bind="notaNueva"></textarea>
+    <button class="boton-agregar" @onclick="GuardarNota">Guardar Nota</button>
+
+    <div class="lista-notas text-center">
+        <h3>Notas Guardadas</h3>
+        <div>
+            @foreach (var nota in notas)
+            {
+                <div class="nota-item">
+                    <span class="nota-span">@nota</span>
+                    <div class="nota-botones">
+                        <button class="boton-editar" @onclick="() => EditarNota(nota)">Editar</button>
+                        <button class="boton-eliminar" @onclick="() => EliminarNota(nota)">Eliminar</button>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@code {
+    private List<string> notas = new List<string>();
+    private string notaNueva = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await CargarNotas();
+    }
+
+    private async Task GuardarNota()
+    {
+        if (!string.IsNullOrWhiteSpace(notaNueva))
+        {
+            notas.Add(notaNueva);
+            await JS.InvokeVoidAsync("localStorage.setItem", "notas", JsonSerializer.Serialize(notas));
+            notaNueva = string.Empty;
+        }
+    }
+
+    private async Task CargarNotas()
+    {
+        var notasGuardadas = await JS.InvokeAsync<string>("localStorage.getItem", "notas");
+        if (!string.IsNullOrEmpty(notasGuardadas))
+        {
+            notas = JsonSerializer.Deserialize<List<string>>(notasGuardadas) ?? new List<string>();
+        }
+    }
+
+    private async Task EditarNota(string nota)
+    {
+        notaNueva = nota;
+        notas.Remove(nota);
+        await JS.InvokeVoidAsync("localStorage.setItem", "notas", JsonSerializer.Serialize(notas));
+    }
+
+    private async Task EliminarNota(string nota)
+    {
+        notas.Remove(nota);
+        await JS.InvokeVoidAsync("localStorage.setItem", "notas", JsonSerializer.Serialize(notas));
+    }
+}

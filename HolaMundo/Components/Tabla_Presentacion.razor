@@ -1,0 +1,200 @@
+﻿@using System.Globalization
+
+<style>
+    .container-dashboard {
+        margin: 20px;
+        position: relative;
+        color: var(--default-color);
+        padding: 20px;
+        border-radius: 10px;
+        text-align: center;
+        box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15);
+        border: 1px solid color-mix(in srgb, var(--accent-color), transparent 70%);
+    }
+
+    @@media (max-width: 640px) {
+        .container-dashboard {
+            margin: 0px;
+            margin-bottom: 20px;
+            position: relative;
+            color: var(--default-color);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        }
+    }
+
+    .header-Tpresentacion {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 1em;
+    }
+
+        .header-Tpresentacion span {
+            color: var(--heading-color);
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+    .balance-container {
+        padding: 15px;
+        border: 1px solid var(--default-color);
+        border-radius: 8px;
+        background-color: var(--background-color);
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+        .balance-container h4 {
+            color: var(--heading-color);
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+
+        .balance-container h1 {
+            color: var(--accent-color);
+            font-size: 36px;
+            margin-bottom: 10px;
+            animation: balance-appear 1s ease-in-out;
+        }
+
+    @@keyframes balance-appear {
+        0% {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+
+        100% {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .row {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 20px;
+    }
+
+    .col {
+        flex: 1;
+        padding: 10px;
+    }
+
+    .ingresos, .gastos {
+        display: flex;
+        border: 2px solid var(--accent-color);
+        flex-direction: column;
+        align-items: center;
+        padding: 20px;
+        border-radius: 8px;
+        transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .ingresos {
+        background: linear-gradient(to bottom, #f0fff0, var(--background-color)); /* Gradiente verde */
+    }
+
+    .gastos {
+        background: linear-gradient(to bottom, #fff0f0, var(--background-color)); /* Gradiente rojo */
+    }
+
+        .ingresos:hover, .gastos:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
+        }
+
+        .ingresos i, .gastos i {
+            font-size: 32px;
+            margin-bottom: 15px;
+            transition: transform 0.3s ease;
+        }
+
+    .ingresos i {
+        color: #28a745; /* Verde para ingresos */
+    }
+
+    .gastos i {
+        color: #dc3545; /* Rojo para gastos */
+    }
+
+    .precio-ingresos {
+        color: #28a745; /* Verde para ingresos */
+        font-weight: bold;
+    }
+
+    .precio-gastos {
+        color: #dc3545; /* Rojo para gastos */
+        font-weight: bold;
+    }
+
+    .ingresos span, .gastos span {
+        font-size: 18px;
+    }
+
+        .ingresos span:nth-child(3), .gastos span:nth-child(3) {
+            transition: color 0.3s ease;
+        }
+
+
+    @@media (max-width: 350px) {
+        .balance-container h1 {
+            font-size: 24px; /* Reduce el tamaño de la fuente para pantallas pequeñas */
+        }
+
+        .balance-container h4 {
+            font-size: 16px; /* También puedes reducir el tamaño del subtítulo */
+        }
+
+        .ingresos i, .gastos i {
+            font-size: 24px; /* Ajusta el tamaño del ícono */
+        }
+
+        .ingresos span, .gastos span {
+            font-size: 14px; /* Ajusta el tamaño del texto */
+        }
+    }
+</style>
+
+<div class="container-dashboard">
+    <div class="header-Tpresentacion">
+        <span>@DateTime.Now.ToString("dd MMM yyyy", new CultureInfo("es-CL"))</span>
+    </div>
+    <div class="balance-container text-center">
+        <h4>Saldo en las cuentas</h4>
+        <h1>@SaldoFormateado</h1>
+    </div>
+    <div class="row">
+        <div class="col">
+            <div class="ingresos">
+                <i class="bi bi-arrow-up-circle-fill"></i>
+                <span>Ingresos</span>
+                <span class="precio-ingresos">@TotalIngresosFormateado</span>
+            </div>
+        </div>
+        <div class="col">
+            <div class="gastos">
+                <i class="bi bi-arrow-down-circle-fill"></i>
+                <span>Gastos</span>
+                <span class="precio-gastos">@TotalGastosFormateado</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+
+
+    //Obtener la sumatoria y totales de gastos, ingresos para luego obtener el saldo actual.
+    private decimal Gastos => 100000;
+    private decimal Ingresos => 700000;
+    private decimal Saldo => Ingresos - Gastos;
+
+    //Formateo de datos para mostrar.
+    private string TotalGastosFormateado => "$" + Gastos.ToString("N0", new CultureInfo("es-CL"));
+    private string TotalIngresosFormateado => "$" + Ingresos.ToString("N0", new CultureInfo("es-CL"));
+    private string SaldoFormateado => "$" + Saldo.ToString("N0", new CultureInfo("es-CL"));
+
+}

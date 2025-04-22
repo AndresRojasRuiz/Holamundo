@@ -1,0 +1,580 @@
+﻿@using System.Globalization
+@inject NavigationManager Navigation
+
+<style>
+   
+    .container-transacciones {
+        background: var(--background-color);
+        margin: 20px;
+        position: relative;
+        color: var(--default-color);
+        padding: 20px;
+        border-radius: 10px;
+        text-align: center;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .contenedor-elementos-transacciones {
+        padding: 20px;
+        border-radius: 8px;
+        text-align: center;
+    }
+
+    .header {
+        background: var(--background-color);
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .list-group {
+        border: 1px solid var(--surface-color);
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        background-color: var(--background-color);
+    }
+
+    .transaction-type-ingresos {
+        color: #28a745; /* Verde para ingresos */
+    }
+
+    .transaction-type-gastos {
+        color: #dc3545; /* Rojo para gastos */
+    }
+
+
+    .container-transacciones h1, h2, h3, h4 {
+        color: var(--accent-color);
+    }
+
+    .total-mes-gastos-ingresos {
+        text-align: center;
+        margin-bottom: 20px;
+        background-color: var(--surface-color);
+        padding: 20px;
+        border-radius: 8px;
+    }
+
+    .total-ingresos h1 {
+        color: #28a745; /* Verde para ingresos */
+    }
+
+    .total-gastos h1 {
+        color: #dc3545; /* Rojo para gastos */
+    }
+
+    .total-mes-gastos-ingresos h4 {
+        font-size: 1.2em;
+        margin-bottom: 5px;
+        color: var(--heading-color);
+    }
+
+    .total-mes-gastos-ingresos h1 {
+        font-size: 2em;
+        font-weight: bold;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+        transition: color 0.3s ease;
+    }
+
+
+    .form-label {
+        color: var(--accent-color);
+    }
+
+    .list-group-item {
+        background-color: var(--surface-color);
+        color: var(--default-color);
+        border: none;
+        margin-bottom: 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: relative;
+        border-radius: 8px;
+        padding: 10px;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+        .list-group-item img {
+            width: 40px;
+            height: 40px;
+            margin-right: 15px;
+        }
+
+        .list-group-item strong {
+            font-size: 18px;
+        }
+
+    .transaction-left {
+        display: flex;
+        align-items: center;
+    }
+
+    .transaction-right {
+        text-align: right;
+        display: flex;
+        align-items: center;
+    }
+
+    .transaction-amount {
+        margin-left: 15px;
+        margin-right: 10px;
+    }
+
+    .btn-filtros {
+        background-color: var(--surface-color);
+        color: var(--accent-color);
+        padding: 8px;
+        cursor: pointer;
+        border: 1px solid var(--accent-color);
+        border-radius: 4px;
+        width: 100%;
+        text-align: center;
+        transition: all 0.3s ease;
+        font-size: 0.9rem;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+        .btn-filtros i {
+            margin-right: 10px;
+        }
+
+        .btn-filtros:hover {
+            background-color: var(--accent-color);
+            color: var(--surface-color);
+            border: 1px solid var(--accent-color);
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+            transform: scale(1.05);
+        }
+
+    .btn-clear-filters:focus {
+        outline: none;
+    }
+
+    .btn-link {
+        color: var(--accent-color);
+        transition: color 0.3s ease;
+    }
+
+        .btn-link:hover {
+            text-decoration: underline;
+            color: var(--highlight-color);
+        }
+
+    input[type="number"]::-webkit-outer-spin-button,
+    input[type="number"]::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    input[type="number"] {
+        -moz-appearance: textfield;
+        border: 1px solid var(--accent-color);
+        padding: 5px;
+        border-radius: 4px;
+        width: 100%;
+    }
+
+    .balance-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .balance-container {
+        border: 1px solid var(--surface-color);
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        margin: 20px;
+        background-color: var(--background-color);
+        border-radius: 8px;
+    }
+
+    .tipos-gastos {
+        margin-top: 10px;
+        text-align: center;
+    }
+
+    .transaction-note {
+        width: 100%;
+        margin-top: 10px;
+        color: var(--accent-color);
+        font-weight: bold;
+        text-align: justify;
+        text-align: center;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        white-space: normal;
+    }
+
+    .date-header {
+        font-size: 18px;
+        margin-top: 20px;
+        margin-bottom: 10px;
+        color: var(--accent-color);
+    }
+
+    .transaction-type-ingresos {
+        color: #28a745; /* Verde para ingresos */
+    }
+
+    .transaction-type-gastos {
+        color: #dc3545; /* Rojo para gastos */
+    }
+
+    .Modal-Añadir {
+        display: flex;
+        justify-content: center;
+    }
+
+    .yellow-text {
+        margin-right: 2px;
+        font-weight: bold;
+        color: var(--accent-color);
+    }
+
+    .posicion-calendario {
+        display: flex;
+        justify-content: center;
+    }
+
+    .month-navigation-button {
+        background: none;
+        border: none;
+        color: var(--accent-color);
+        font-size: 1rem;
+        cursor: pointer;
+        padding: 0;
+        transition: color 0.3s ease;
+    }
+
+        .month-navigation-button:hover {
+            text-decoration: underline;
+            color: var(--highlight-color);
+        }
+
+    input[type="month"] {
+        background-color: var(--surface-color);
+        color: var(--accent-color);
+        border: 1px solid var(--accent-color);
+        padding: 5px;
+        border-radius: 4px;
+    }
+
+        input[type="month"]::-webkit-calendar-picker-indicator {
+            filter: invert(62%) sepia(83%) saturate(467%) hue-rotate(2deg) brightness(100%) contrast(97%);
+        }
+
+    .titulo-filtro {
+        margin-bottom: 5px;
+    }
+
+        .titulo-filtro span {
+            font-weight: bold;
+        }
+
+    .list-group-item strong {
+        margin-right: 20px;
+    }
+
+    .posicion-1 {
+        display: flex;
+        justify-content: flex-end;
+    }
+
+    .posicion-2 {
+        display: flex;
+        justify-content: flex-start;
+    }
+
+
+
+    .footer-container-transacciones {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .footer-fechas-inicio {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+    }
+
+    .footer-fechas {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+    }
+
+    .dropdown-filters {
+        display: none;
+        margin-bottom: 20px;
+    }
+
+        .dropdown-filters button {
+            background-color: var(--surface-color);
+            color: var(--accent-color);
+            border: 1px solid var(--accent-color);
+            border-radius: 4px;
+            padding: 10px;
+            width: 100%;
+            text-align: center;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+            .dropdown-filters button:hover {
+                background-color: var(--accent-color);
+                color: var(--surface-color);
+                border: 1px solid var(--accent-color);
+            }
+
+        .dropdown-filters .dropdown-menu {
+            background-color: var(--surface-color);
+            border: 1px solid var(--accent-color);
+            border-radius: 4px;
+            width: 100%;
+        }
+
+        .dropdown-filters .dropdown-item {
+            color: var(--accent-color);
+            font-size: 0.9rem;
+            text-align: center;
+            cursor: pointer;
+            padding: 10px;
+        }
+
+            .dropdown-filters .dropdown-item:hover {
+                background-color: var(--accent-color);
+                color: var(--surface-color);
+            }
+
+
+
+
+    @@media (max-width: 992px) {
+        .posicion-2
+
+    {
+        display: flex;
+        justify-content: flex-end;
+    }
+
+    }
+
+    @@media (max-width: 991px) {
+        .list-group-item strong
+
+    {
+        font-size: 16px;
+        margin-right: 20px;
+    }
+
+    .date-header {
+        font-size: 18px;
+    }
+
+    }
+
+    @@media (max-width: 640px) {
+        .container-transacciones
+
+    {
+        margin: 0px;
+        margin-bottom: 20px;
+        position: relative;
+        color: var(--default-color);
+        padding: 15px;
+        border-radius: 10px;
+        text-align: center;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    }
+
+    @@media (max-width: 576px) {
+        .list-group-item
+
+    {
+        flex-direction: column;
+    }
+
+    .list-group-item strong {
+        margin-right: 0px;
+    }
+
+    .transaction-left {
+        display: contents;
+        align-items: center;
+    }
+
+    .transaction-right {
+        display: flex;
+        align-items: center;
+    }
+
+    .transaction-amount {
+        margin-left: 15px;
+        margin-right: 10px;
+    }
+
+    .posicion-2 {
+        display: flex;
+        justify-content: center;
+    }
+
+    .posicion-1 {
+        display: flex;
+        justify-content: center;
+    }
+
+    }
+
+    @@media (max-width: 380px) {
+        .total-mes-gastos-ingresos h4
+
+    {
+        font-size: 1.2em;
+        margin-bottom: 5px;
+        color: var(--heading-color);
+    }
+
+    .total-mes-gastos-ingresos h1 {
+        font-size: 1.5em;
+        font-weight: bold;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+        transition: color 0.3s ease;
+    }
+
+    .month-navigation-button {
+        font-size: 0.8rem;
+    }
+
+    }
+</style>
+
+<PageTitle>Tabla Transacciones (Offline)</PageTitle>
+
+@if (isAuthenticated)
+{
+    <div class="container-transacciones">
+        <div class="header">
+            <div class="row">
+                <h3>Transacciones</h3>
+            </div>
+            <div class="row">
+                <div class="total-mes-gastos-ingresos total-ingresos col-xl-6">
+                    <h4>Total Ingresos de @MesActual.</h4>
+                    <h1>@TotalIngresosFormateado</h1>
+                </div>
+                <div class="total-mes-gastos-ingresos total-gastos col-xl-6">
+                    <h4>Total Gastos de @MesActual.</h4>
+                    <h1>@TotalGastosFormateado</h1>
+                </div>
+            </div>
+        </div>
+
+        <div class="container contenedor-elementos-transacciones">
+            @foreach (var dateGroup in FilteredTransactions.OrderByDescending(t => t.Date).GroupBy(t => t.Date.Date))
+            {
+                var totalGastos = dateGroup.Where(t => t.Type == Transaction.TransactionType.Gasto).Sum(t => t.Amount);
+                var totalIngresos = dateGroup.Where(t => t.Type == Transaction.TransactionType.Ingreso).Sum(t => t.Amount);
+
+                <div class="row date-header">
+                    <div class="col-xl-5 col-lg-4 col-md-6 col-sm-6 col-12">
+                        <span class="yellow-text">@dateGroup.Key.ToString("dd MMMM yyyy", new CultureInfo("es-CL"))</span>
+                    </div>
+                    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 col-12">
+                        <span class="yellow-text">Ingresos: </span>
+                        <span class="transaction-type-ingresos">$@totalIngresos.ToString("N0", new CultureInfo("es-CL"))</span>
+                    </div>
+                    <div class="col-xl-3 col-lg-4 col-md-12 col-sm-12 col-12">
+                        <span class="yellow-text">Gastos: </span>
+                        <span class="transaction-type-gastos">$@totalGastos.ToString("N0", new CultureInfo("es-CL"))</span>
+                    </div>
+                </div>
+
+                @foreach (var transaction in dateGroup)
+                {
+                    <div class="list-group-item">
+                        <strong class="@(transaction.Type == Transaction.TransactionType.Ingreso ? "transaction-type-ingresos" : "transaction-type-gastos")">
+                            @transaction.Subcategory
+                        </strong>
+                        <div class="transaction-amount">$@transaction.Amount.ToString("N0", new CultureInfo("es-CL"))</div>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+}
+else
+{
+    <div>Necesitas autorización para acceder a este sitio.</div>
+}
+
+@code {
+    private bool isAuthenticated = true;
+    private List<Transaction> transactions = new List<Transaction>();
+    private List<Transaction> FilteredTransactions = new List<Transaction>();
+    private DateTime selectedMonth = DateTime.Now;
+    private string MesActual => selectedMonth.ToString("MMMM yyyy", new CultureInfo("es-CL"));
+
+    protected override void OnInitialized()
+    {
+        LoadLocalTransactions();
+        FilterTransactionsByMonth(selectedMonth);
+    }
+
+    private void LoadLocalTransactions()
+    {
+        transactions = new List<Transaction>
+        {
+            new Transaction { Id = 1, Type = Transaction.TransactionType.Ingreso, Subcategory = "Salario", Amount = 1500000, Date = DateTime.Now.AddDays(-5) },
+            new Transaction { Id = 2, Type = Transaction.TransactionType.Gasto, Subcategory = "Arriendo", Amount = 500000, Gasto = Transaction.GastoType.fijo, Date = DateTime.Now.AddDays(-3) },
+            new Transaction { Id = 3, Type = Transaction.TransactionType.Gasto, Subcategory = "Comida", Amount = 60000, Gasto = Transaction.GastoType.variable, Date = DateTime.Now.AddDays(-1) }
+        };
+    }
+
+    private void FilterTransactionsByMonth(DateTime date)
+    {
+        FilteredTransactions = transactions.Where(t => t.Date.Year == date.Year && t.Date.Month == date.Month).ToList();
+    }
+
+    private decimal TotalGastos => FilteredTransactions.Where(t => t.Type == Transaction.TransactionType.Gasto).Sum(t => t.Amount);
+    private decimal TotalIngresos => FilteredTransactions.Where(t => t.Type == Transaction.TransactionType.Ingreso).Sum(t => t.Amount);
+
+    private string TotalGastosFormateado => "$" + TotalGastos.ToString("N0", new CultureInfo("es-CL"));
+    private string TotalIngresosFormateado => "$" + TotalIngresos.ToString("N0", new CultureInfo("es-CL"));
+}
+
+@code {
+    public class Transaction
+    {
+        public enum TransactionType
+        {
+            Gasto,
+            Ingreso
+        }
+
+        public enum GastoType
+        {
+            fijo,
+            variable,
+            hormiga
+        }
+
+        public int Id { get; set; }
+        public TransactionType Type { get; set; }
+        public GastoType? Gasto { get; set; }
+        public string Subcategory { get; set; } = string.Empty;
+        public int Amount { get; set; }
+        public DateTime Date { get; set; } = DateTime.Now;
+        public string IconPath { get; set; } = "/img/otro/Otro.svg";
+    }
+}
